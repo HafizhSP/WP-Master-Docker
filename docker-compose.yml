@@ -1,0 +1,46 @@
+services:
+  wordpress:
+    image: wordpress:php8.2-apache
+    container_name: wp-app
+    restart: always
+    # ==== PERLU DIGANTI ====
+    environment:
+      WORDPRESS_DB_HOST: db_wp:3306
+      WORDPRESS_DB_USER: wpuser
+      WORDPRESS_DB_PASSWORD: wppass
+      WORDPRESS_DB_NAME: wpdb
+      # Opsional: atur upload max size
+      PHP_UPLOAD_MAX_FILESIZE: 256M
+      PHP_POST_MAX_SIZE: 128M
+    # ==== END PERLU DIGANTI ====
+    volumes:
+      - ./wordpress:/var/www/html
+    networks:
+      - edge
+    labels:
+      - "traefik.enable=true"
+      # ==== PERLU DIGANTI ====
+      - "traefik.http.routers.wordpress.rule=Host(`blog.hafizhsp.id`)"
+      # ==== END PERLU DIGANTI ====
+      - "traefik.http.routers.wordpress.entrypoints=websecure"
+      - "traefik.http.routers.wordpress.tls.certresolver=myresolver"
+
+  db_wp:
+    image: mysql:8
+    container_name: wp-db
+    restart: always
+    # ==== PERLU DIGANTI ====
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: wpdb
+      MYSQL_USER: wpuser
+      MYSQL_PASSWORD: wppass
+    # ==== END PERLU DIGANTI ====
+    volumes:
+      - ./mysql_wp:/var/lib/mysql
+    networks:
+      - edge
+
+networks:
+  edge:
+    external: true
