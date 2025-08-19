@@ -12,6 +12,12 @@ services:
       # Opsional: atur upload max size
       PHP_UPLOAD_MAX_FILESIZE: 256M
       PHP_POST_MAX_SIZE: 128M
+      WORDPRESS_CONFIG_EXTRA: |
+        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') { $_SERVER['HTTPS'] = 'on'; }
+        define('WP_HOME',    'https://blog.hafizhsp.id');
+        define('WP_SITEURL', 'https://blog.hafizhsp.id');
+        define('FORCE_SSL_ADMIN', true);
+
     # ==== END PERLU DIGANTI ====
     volumes:
       - ./wordpress:/var/www/html
@@ -23,7 +29,8 @@ services:
       - "traefik.http.routers.wordpress.rule=Host(`blog.hafizhsp.id`)"
       # ==== END PERLU DIGANTI ====
       - "traefik.http.routers.wordpress.entrypoints=websecure"
-      - "traefik.http.routers.wordpress.tls.certresolver=myresolver"
+      - "traefik.http.routers.wordpress.tls.certresolver=le"
+      - "traefik.docker.network=edge"
 
   db_wp:
     image: mysql:8
