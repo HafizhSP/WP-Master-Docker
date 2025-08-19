@@ -1,22 +1,17 @@
 services:
   wordpress:
     image: wordpress:php8.2-apache
-    container_name: wp-app
+    container_name: wp-NAMAPROJECT
     restart: always
     # ==== PERLU DIGANTI ====
     environment:
-      WORDPRESS_DB_HOST: db_wp:3306
-      WORDPRESS_DB_USER: wpuser
-      WORDPRESS_DB_PASSWORD: wppass
-      WORDPRESS_DB_NAME: wpdb
+      WORDPRESS_DB_HOST: db_NAMAPROJECT:3306
+      WORDPRESS_DB_USER: "db_user"
+      WORDPRESS_DB_PASSWORD: "db_pass"
+      WORDPRESS_DB_NAME: "db_nama_db"
       # Opsional: atur upload max size
       PHP_UPLOAD_MAX_FILESIZE: 256M
       PHP_POST_MAX_SIZE: 128M
-      WORDPRESS_CONFIG_EXTRA: |
-        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') { $_SERVER['HTTPS'] = 'on'; }
-        define('WP_HOME',    'https://blog.hafizhsp.id');
-        define('WP_SITEURL', 'https://blog.hafizhsp.id');
-        define('FORCE_SSL_ADMIN', true);
 
     # ==== END PERLU DIGANTI ====
     volumes:
@@ -26,25 +21,25 @@ services:
     labels:
       - "traefik.enable=true"
       # ==== PERLU DIGANTI ====
-      - "traefik.http.routers.wordpress.rule=Host(`blog.hafizhsp.id`)"
+      - "traefik.http.routers.wordpress.rule=Host(`NAMAPROJECT.hafizhsp.id`)"
       # ==== END PERLU DIGANTI ====
       - "traefik.http.routers.wordpress.entrypoints=websecure"
       - "traefik.http.routers.wordpress.tls.certresolver=le"
       - "traefik.docker.network=edge"
 
-  db_wp:
+  db_NAMAPROJECT:
     image: mysql:8
-    container_name: wp-db
+    container_name: db-NAMAPROJECT
     restart: always
     # ==== PERLU DIGANTI ====
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: wpdb
-      MYSQL_USER: wpuser
-      MYSQL_PASSWORD: wppass
+      MYSQL_ROOT_PASSWORD: "db_root_pass"
+      MYSQL_DATABASE: "db_nama_db"
+      MYSQL_USER: "db_user"
+      MYSQL_PASSWORD: "db_pass"
     # ==== END PERLU DIGANTI ====
     volumes:
-      - ./mysql_wp:/var/lib/mysql
+      - ./mysql_NAMAPROJECT:/var/lib/mysql
     networks:
       - edge
 
