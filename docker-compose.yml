@@ -4,6 +4,7 @@ services:
     container_name: wp-NAMAPROJECT
     restart: always
     # ==== PERLU DIGANTI ====
+    mem_limit: 384m
     environment:
       WORDPRESS_DB_HOST: db_NAMAPROJECT:3306
       WORDPRESS_DB_USER: "db_user"
@@ -33,6 +34,7 @@ services:
     container_name: db-NAMAPROJECT
     restart: always
     # ==== PERLU DIGANTI ====
+    mem_limit: 512m
     environment:
       MYSQL_ROOT_PASSWORD: "db_root_pass"
       MYSQL_DATABASE: "db_nama_db"
@@ -41,6 +43,7 @@ services:
     # ==== END PERLU DIGANTI ====
     volumes:
       - ./mysql_NAMAPROJECT:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/zz-tuning.cnf:ro
     networks:
       - edge
 
